@@ -1,0 +1,121 @@
+/* Empty. Add your own CSS if you like */
+
+.calc .button,
+.types .box .button {
+  margin: 1px;
+}
+
+.calc .button {
+  font-size: 24px;
+}
+
+.types .box {
+  min-height: 290px;
+  text-align: center;
+}
+
+.report .box {
+  min-height: 100vh;
+}
+
+.calc .high {
+  height: 55px;
+  margin: 1px 0 7px 0;
+}
+
+.calc .ttl {
+  padding: 13px 10px 10px 30px;
+  font-size: 20px;
+}
+
+.calc .amt {
+  padding: 14px 10px 10px 10px;
+  font-size: 30px;
+}
+
+.conceal {
+  visibility: hidden;
+}
+
+highchart {
+  width: 100%;
+  display: block;
+}
+
+.box_a .margin_a {
+  margin: 0;
+  font-size: 18px;
+  font-family: 微软雅黑;
+}
+
+.box_a .margin_b {
+  margin-bottom: 2px;
+  padding: 5px 0 5px 0;
+  font-size: 20px;
+  border: none;
+  background: #f8f8f8;
+}
+
+.bar.bar-dark {
+  border: none;
+  background-image: none;
+  background-color: black;
+}
+
+.popup-container .popup {
+  background-color: white;
+  /*color: red;
+  font-size: 18px;*/
+  text-align: center;
+}
+
+.popup-title {
+  font-size: 18px;
+}
+
+.button.button_c {
+  background: #31afd2;
+}
+
+.red_a {
+  color: #FF6666;
+}
+
+.blue_a {
+  color: #31afd2;
+}
+
+.box_d .item {
+  padding: 10px;
+  background: #f8f8f8;
+}
+
+.box_d .item .badge {
+  top: 12px;
+  right: 15px;
+}
+
+.box .button {
+  line-height: 47px;
+}
+
+.box .button.button-calm.activated {
+  background-color: #11c1f3;
+}
+
+.box .button.button-dark.activated {
+  background-color: #f8f8f8;
+  color: #444;
+}
+
+.button.button-assertive {
+  background-color: #FF6666;
+}
+
+.box .button.button-assertive.activated {
+  background-color: #FF6666;
+}
+
+.item .badge_a {
+  right: 15px;
+}

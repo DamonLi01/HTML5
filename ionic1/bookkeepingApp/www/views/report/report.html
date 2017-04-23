@@ -1,0 +1,57 @@
+<ion-view view-title="统计报表">
+  <ion-content overflow-scroll="true">
+    <ion-refresher on-refresh="refresh()" pulling-text="下拉刷新" refreshing-text="刷新中" spinner="dots">
+    </ion-refresher>
+    <ion-slide-box does-continue="true" class="report">
+      <ion-slide class="box">
+        <ion-list>
+          <ion-item>
+            今年支出分类统计
+            <div class="badge_a badge assertive">
+              合计：{{gather.pie[1].data|collect|currency:'¥ '}}
+            </div>
+          </ion-item>
+          <ion-item ng-repeat="row in gather.pie[1].data | cuteZero">
+            {{row[0]}}
+            <div class="badge_a badge assertive">
+              {{row[1]|currency:'¥ '}}
+            </div>
+          </ion-item>
+          <ion-item ng-click="nextSlide(1)" class="item-icon-right">
+            今年支出统计饼图
+            <i class="icon ion-arrow-right-b"></i>
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+      <ion-slide>
+        <!--<highchart config="chartPieConfig"></highchart>-->
+        <highchart config="chartPieConfig_now"></highchart>
+        <ion-list>
+          <ion-item ng-click="nextSlide(2)" class="text-left item-icon-right">
+            历年支出统计饼图
+            <i class="icon ion-arrow-right-b"></i>
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+      <ion-slide>
+        <highchart config="chartPieConfig"></highchart>
+        <!--<highchart config="chartPieConfig_now"></highchart>-->
+        <ion-list>
+          <ion-item ng-click="nextSlide(3)" class="text-left item-icon-right">
+            收支 盈余 条形图
+            <i class="icon ion-arrow-right-b"></i>
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+      <ion-slide>
+        <highchart config="barChart"></highchart>
+        <ion-list>
+          <ion-item ng-click="nextSlide(0)" class="text-left item-icon-right">
+            今年支出分类统计
+            <i class="icon ion-arrow-right-b"></i>
+          </ion-item>
+        </ion-list>
+      </ion-slide>
+    </ion-slide-box>
+  </ion-content>
+</ion-view>

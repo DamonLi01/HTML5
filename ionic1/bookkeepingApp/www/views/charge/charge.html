@@ -1,0 +1,76 @@
+<ion-view view-title="日常记账">
+  <ion-content overflow-scroll="true" class="box_a">
+    <ion-refresher on-refresh="refresh()" pulling-text="下拉刷新" refreshing-text="刷新中" spinner="dots">
+    </ion-refresher>
+    <button ng-if="Mode" ng-click="openDatePicker()" class="margin_a button-full button button_c button-calm ">账单日期：{{record.date|date:'yyyy-MM-dd'}}</button>
+    <ion-list ng-if="Mode" class="calc">
+      <ion-item class="row high  item-icon-left">
+        <i class="icon ion-compose"></i>
+        <div class="col-30 ttl"><b style="font-size: 24px;">&nbsp;<span ng-class="{'red_a':record.class==0,'blue_a':record.class==1}">{{type[record.class]}}</span>&nbsp;{{classif[record.class][record.subClass]}}</b></div>
+        <div class="col amt text-right">{{record.value}}</div>
+      </ion-item>
+      <ion-item class="row item-borderless">
+        <div ng-click="click(1)" class="col button  button-dark">1</div>
+        <div ng-click="click(2)" class="col button  button-dark">2</div>
+        <div ng-click="click(3)" class="col button   button-dark">3</div>
+        <div ng-click="clear()" class="col button   button-assertive"><i class="icon ion-close-round"></i></div>
+      </ion-item>
+      <ion-item class="row margin_item item-borderless">
+        <div ng-click="click(4)" class="col button   button-dark">4</div>
+        <div ng-click="click(5)" class="col button   button-dark">5</div>
+        <div ng-click="click(6)" class="col button  button-dark">6</div>
+        <div ng-click="backspace()" class="col button   button-energized "><i class="icon  ion-arrow-left-c"></i></div>
+      </ion-item>
+      <ion-item class="row margin_item item-borderless">
+        <div ng-click="click(7)" class="col button  button-dark">7</div>
+        <div ng-click="click(8)" class="col button  button-dark">8</div>
+        <div ng-click="click(9)" class="col button  button-dark">9</div>
+        <div ng-click="add()" class="col  button button-balanced" ng-class="{'conceal': record.value=='' || record.value=='.' || record.value<0.01}"><i class="icon ion-checkmark-round"></i></div>
+      </ion-item>
+      <ion-item class="row margin_item item-borderless">
+        <div ng-click="click('00')" class="col button button-dark">00</div>
+        <div ng-click="click(0)" class="col button button-dark">0</div>
+        <div ng-click="click('.')" class="col button button-dark">.</div>
+        <div ng-click="end()" class="col button button-calm">{{end_ok}}</div>
+      </ion-item>
+    </ion-list>
+    <ion-slide-box ng-if="Mode" class="types">
+      <ion-slide>
+        <ion-list>
+          <ion-item ng-click="nextSlide(1)" class="margin_b item-icon-right">
+            <b>&nbsp;支出类</b>
+            <i class="icon ion-arrow-right-b"></i>
+          </ion-item>
+        </ion-list>
+        <div class="box">
+          <div ng-click="setClass(0,$index)" class="button" ng-repeat="item in classif[0]" ng-class="{'button-dark button-outline':$index!=record.subClass && record.class==0||record.class==1,
+          'button-assertive':!($index!=record.subClass && record.class==0||record.class==1)}">{{ item }}</div>
+        </div>
+      </ion-slide>
+      <ion-slide>
+        <ion-list>
+          <ion-item ng-click="nextSlide(0)" class="margin_b item-icon-left text-right">
+            <b>收入类&nbsp;</b>
+            <i class="icon ion-arrow-left-b"></i>
+          </ion-item>
+        </ion-list>
+        <div class="box">
+          <div ng-click="setClass(1,$index)" class="button" ng-repeat="item in classif[1]" ng-class="{'button-dark button-outline':$index!=record.subClass && record.class==1||record.class==0,
+          'button-calm':!($index!=record.subClass && record.class==1||record.class==0)}">{{ item }}</div>
+        </div>
+      </ion-slide>
+    </ion-slide-box>
+    <ion-toggle ng-model="Mode" ng-checked="Mode" toggle-class="toggle-stable"><b>编辑界面开关</b></ion-toggle>
+    <ion-list class="box_d">
+      <ion-item>
+        <b>当月结账日 | 类别 | 收支子类</b>
+        <div class="badge dark">金额</div>
+      </ion-item>
+      <ion-item on-hold="onHold(row)" ng-repeat="row in data |orderBy:'date':true">
+        {{row.date|date:'yyyy-MM-dd'}} | {{type[row.class]}} | {{classif[row.class][row.subClass]}}
+        <div ng-class="{'assertive':row.class==0,'positive':row.class==1}" class="badge ">{{row.value|currency:'¥ '}}</div>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll on-infinite="loadMore()"  distance="1%" ng-if="more"></ion-infinite-scroll>
+  </ion-content>
+</ion-view>

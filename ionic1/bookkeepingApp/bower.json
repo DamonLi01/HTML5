@@ -1,0 +1,28 @@
+{
+  "name": "HelloIonic",
+  "private": true,
+  "devDependencies": {
+    "ionic": "driftyco/ionic-bower#1.3.3"
+  },
+  "authors": [
+    "Daniel00Lai <1051787083@qq.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ionic-datepicker": "^1.2.1",
+    "highcharts": "^5.0.9",
+    "highcharts-ng": "^1.1.0",
+    "ngCordova": "^0.1.27-alpha"
+  }
+}
