@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <title>Hello World</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+
+        .textarea {
+            width: 100%;
+            height: 500px;
+            padding: 10px;
+            resize: none;
+        }
+
+        .Sample {
+            border: 1px solid silver;
+            height: 500px;
+            overflow: auto;
+            padding: 10px;
+            background: whitesmoke;
+        }
+    </style>
+</head>
+
+<body ng-controller="myCtrl">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <div class="navbar-brand">
+                    Hello World
+                    <i class="glyphicon glyphicon-send"></i> Markdown Editor
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <i class="glyphicon glyphicon-book"></i> 我的笔记
+                            <button ng-click="newNote()" class="btn btn-primary btn-xs pull-right">
+                                <i class="glyphicon glyphicon-plus"></i>新建
+                            </button>
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li style="cursor:pointer" class="list-group-item" ng-click="details($index)" ng-repeat="item in data">
+                                {{item.name}}
+                                <br>
+                                <small>
+                                    {{item.time|date:"yyyy-MM-dd HH:mm:ss"}}
+                                </small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div ng-show="info" class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            {{text.name}}
+                            <button ng-click="alter()" class="btn btn-primary btn-xs pull-right">
+                            <i class="glyphicon glyphicon-wrench"></i>
+                            修改
+                            </button>
+                        </h2>
+                    </div>
+                    <div class="panel-body" markdown="{{text.content}}">
+
+                    </div>
+                    <div class="panel-footer">
+                        <small>{{text.time|date:"yyyy-MM-dd HH时mm分ss秒"}}</small>
+                    </div>
+                </div>
+                <div ng-show="add" class="panel panel-default">
+                    <div class="panel-heading">
+                        <input ng-model="title" class="form-control" type="text" placeholder="新笔记">
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6">
+                            <h1 class="panel-title">
+                                编辑器
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </h1>
+                            <br>
+                            <textarea class="textarea" ng-model="Sample" placeholder="笔记内容"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <h1 class="panel-title">
+                                预览区
+                                <i class="glyphicon glyphicon-eye-open"></i>
+                            </h1>
+                            <br>
+                            <div class="Sample" markdown="{{Sample}}"></div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button ng-click="save()" class="btn btn-primary">
+                            <i class="glyphicon glyphicon-floppy-disk"></i>
+                            保存
+                            </button>
+                        <button ng-click="del()" class="btn btn-danger pull-right">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            删除
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/angular.js"></script>
+    <script src="js/marked.js"></script>
+    <script>
+        angular.module('myApp', [])
+            // 用 directive 做 marked.js 解析输出的模板 markdown
+            .directive('markdown', function () {
+                var MD = new marked.Renderer();
+                // marked 基本设置
+                marked.setOptions({
+                    renderer: MD,
+                    gfm: true,
+                    tables: true,
+                    breaks: true, //false,
+                    pedantic: true, //false,
+                    sanitize: true, //false,
+                    smartLists: true,
+                    smartypants: true //false
+                });
+                return {
+                    scope: {
+                        markdown: '@' // '@':字符串匹配，'=':变量对象匹配，...
+                    },
+                    link: function (scope, element, attrs) {
+                        scope.$watch('markdown', function () {
+                            var content = marked(attrs.markdown);
+                            element.html(content);
+                        });
+                    }
+                }
+            })
+            .controller('myCtrl', ['$scope', function ($scope) {
+                $scope.add = false;
+                $scope.info = false;
+                $scope.data = [{
+                    "id": Date.now(),
+                    "name": "Hello World!",
+                    "content": "# 你经历过绝望吗？",
+                    "time": Date.now()
+                }];
+
+                var local = localStorage['NOTE'];
+                if (typeof (local) !== 'undefined' && local !== "[]") {
+                    $scope.data = JSON.parse(local); //字符串转json对象
+                }
+                var storage = function () {
+                    localStorage['NOTE'] = angular.toJson($scope.data); //json对象转字符串
+                };
+                $scope.newNote = function () {
+                    $scope.add = true;
+                    $scope.info = false;
+                    $scope.title = "";
+                    $scope.Sample = "";
+                    $scope.del1 = false;
+                    $scope.k = false;
+                    //console.log($scope.text);
+                };
+                $scope.save = function () {
+                    //console.log($scope.data);
+                    var a = -1;
+                    for (var i = 0; i < $scope.data.length; i++) {
+                        if ($scope.data[i] == $scope.text) {
+                            if ($scope.k == true) {
+                                a = i;
+                            }
+                            //     console.log(k);              
+                            //     console.log(i);
+                            //     console.log($scope.text.id);
+                            //     console.log($scope.data[i].id);
+                            //     //console.log(index)
+                            //     //console.log( $scope.data[index] );
+                            //    // var index = this.$index;
+                            //     $scope.data[i].name = $scope.title;
+                            //     $scope.data[i].content = $scope.Sample;
+                            //     $scope.data[i].time = Date.now();
+                            //$scope.add = false;
+                            // break;
+                            //console.log($scope.text);
+                        }
+                        //break;
+                    }
+                    if (a > -1) {
+                        // var index = this.$index;
+                        $scope.text.name = $scope.title;
+                        $scope.text.content = $scope.Sample;
+                        $scope.text.time = Date.now();
+                        console.log($scope.text);
+                        $scope.text = "";
+                        console.log($scope.text);
+                        $scope.add = false;
+                        storage();
+                        // console.log($scope.text.name);
+                        //console.log("ok");
+                        // $scope.data.push({
+                        //     "id": Date.now(),
+                        //     "name": $scope.title,
+                        //     "content": $scope.Sample,
+                        //     "time": Date.now()
+                        // })
+                    } else if ($scope.title != "") {
+                        $scope.data.push({
+                            "id": Date.now(),
+                            "name": $scope.title,
+                            "content": $scope.Sample,
+                            "time": Date.now()
+                        })
+                        storage();
+                        $scope.add = false;
+                    }
+                    //console.log($scope.data);
+                };
+                $scope.details = function (index) {
+                    $scope.k = true;
+                    $scope.add = false;
+                    $scope.info = true;
+                    //console.log(index)
+                    //console.log( $scope.data[index] );
+                    $scope.text = $scope.data[index];
+                    //console.log($scope.text.name);
+                    $scope.del = function () {
+                        console.log($scope.data[index]);
+                        // console.log(index);
+                        // var index = this.$index;
+                        //     //console.log($scope.data);
+                        if ($scope.del1 == true) {
+                            if (confirm("你确定删除吗？") == true) {
+                                $scope.data.splice(index, 1);
+                                $scope.add = false;
+                                storage();
+                            } else {
+                                return false;
+                            }
+                        }
+                    };
+                };
+                $scope.alter = function () {
+                    $scope.del1 = true;
+                    $scope.add = true;
+                    $scope.info = false;
+                    //console.log($scope[index].name);
+                    $scope.title = $scope.text.name;
+                    $scope.Sample = $scope.text.content;
+                };
+            }]);
+    </script>
+</body>
+
+</html>
